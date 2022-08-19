@@ -15,19 +15,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     if (await check(tokens.access_token)) {
       const userData = await user(tokens.access_token);
-      console.log({ userData });
+
       const uploadPayload = await upload(userID);
       uploadPayload.fields = {
         ...uploadPayload.fields,
         "x-amz-meta-user-id": userID
       };
 
-      return json(uploadPayload);
+      return json({ ...uploadPayload, user: userData });
     } else {
       return await logout(request);
     }
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return await logout(request);
   }
 };
@@ -40,7 +40,7 @@ export default function Index() {
   return (
     <div className="container mx-auto">
       <h1>Sample Web APP</h1>
-
+      <h2>Welcome <strong>{data?.user?.name}</strong></h2>
       <div className="flex justify-center">
         <div className="mb-3 w-96">
           <form action={data.url} method="post" encType="multipart/form-data">
