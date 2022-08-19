@@ -4,6 +4,7 @@ import { check } from "~/models/auth.server";
 import { upload } from "~/models/files.server";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
+import { user } from "~/models/user.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -13,16 +14,20 @@ export const loader: LoaderFunction = async ({ request }) => {
     const tokens = JSON.parse(session.get(USER_TOKENS_KEY));
 
     if (await check(tokens.access_token)) {
+      const userData = await user(tokens.access_token);
+      console.log({ userData });
       const uploadPayload = await upload(userID);
       uploadPayload.fields = {
         ...uploadPayload.fields,
         "x-amz-meta-user-id": userID
       };
+
       return json(uploadPayload);
     } else {
       return await logout(request);
     }
   } catch (e) {
+    console.log(e)
     return await logout(request);
   }
 };
@@ -38,7 +43,7 @@ export default function Index() {
 
       <div className="flex justify-center">
         <div className="mb-3 w-96">
-          <form action={data.url} method="post" encType="multipart/form-data" >
+          <form action={data.url} method="post" encType="multipart/form-data">
             <input
               type="file"
               name="file"
