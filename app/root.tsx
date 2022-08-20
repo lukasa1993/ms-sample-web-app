@@ -19,6 +19,8 @@ export default function App() {
   return (
     <html lang="en" className="h-full">
     <head>
+      <title></title>
+      <link rel="icon" type="image/x-icon" sizes="48x48" href="/favicon.ico"/>
       <Meta />
       <Links />
     </head>
