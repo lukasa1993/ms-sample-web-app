@@ -16,7 +16,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     if (await check(tokens.access_token)) {
       const userData = await user(tokens.access_token);
-      const companyData = await company(tokens.access_token);
+      let companyData = null;
+
+      try {
+        companyData = await company(tokens.access_token);
+      } catch (e) {
+      }
 
       const uploadPayload = await upload(userID);
       uploadPayload.fields = {

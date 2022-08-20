@@ -12,7 +12,7 @@ export async function login(email: string) {
   const res = await fetch("http://auth.example.com/login", {
     method: "post",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email, type:'user' })
   });
 
   try {
