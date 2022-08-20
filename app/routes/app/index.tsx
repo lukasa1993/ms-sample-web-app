@@ -5,6 +5,7 @@ import { upload } from "~/models/files.server";
 import { useLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import { user } from "~/models/user.server";
+import { company } from "~/models/company.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   try {
@@ -15,6 +16,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     if (await check(tokens.access_token)) {
       const userData = await user(tokens.access_token);
+      const companyData = await company(tokens.access_token);
 
       const uploadPayload = await upload(userID);
       uploadPayload.fields = {
@@ -22,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         "x-amz-meta-user-id": userID
       };
 
-      return json({ ...uploadPayload, user: userData });
+      return json({ ...uploadPayload, user: userData, company: companyData });
     } else {
       return await logout(request);
     }
@@ -40,7 +42,7 @@ export default function Index() {
   return (
     <div className="container mx-auto">
       <h1>Sample Web APP</h1>
-      <h2>Welcome <strong>{data?.user?.name}</strong></h2>
+      <h2>Welcome <strong>{data?.user?.name}</strong>&nbsp;<strong>{data?.company?.name}</strong></h2>
       <div className="flex justify-center">
         <div className="mb-3 w-96">
           <form action={data.url} method="post" encType="multipart/form-data">
@@ -51,11 +53,11 @@ export default function Index() {
                 setType(e.target.files?.[0].type || "binary/octet-stream");
               }}
             />
-            <input type="hidden" name={"Content-Type"} value={type} />
+            <input type="hidden" name={"Content-Type"} value={type}/>
             {Object.keys(data.fields).map(field => (
-              <input key={field} type="hidden" name={field} value={data.fields[field]} />
+              <input key={field} type="hidden" name={field} value={data.fields[field]}/>
             ))}
-            <input type="submit" value="submit" />
+            <input type="submit" value="submit"/>
           </form>
         </div>
       </div>
