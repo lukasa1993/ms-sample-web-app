@@ -45,4 +45,4 @@ COPY --from=build /myapp/build /myapp/build
 COPY --from=build /myapp/public /myapp/public
 COPY --from=build /myapp/package.json /myapp/package.json
 
-CMD npm run start
+CMD npm run prod
