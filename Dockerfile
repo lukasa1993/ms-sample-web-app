@@ -4,13 +4,15 @@ FROM node:16-alpine as base
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
 
+RUN npm install -g npm
+
 # Install all node_modules, including dev dependencies
 FROM base as deps
 
 WORKDIR /myapp
 
 ADD package.json package-lock.json ./
-RUN npm install --production=false
+RUN npm install
 
 # Setup production node_modules
 FROM base as production-deps

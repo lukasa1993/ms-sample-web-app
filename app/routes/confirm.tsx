@@ -46,7 +46,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   try {
     const tokens = await authenticate(email, code);
-
+console.log({ tokens })
     return await createUserSession({
       request,
       redirectTo: "/app",
