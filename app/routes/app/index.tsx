@@ -50,7 +50,7 @@ export default function Index() {
       <h2>Welcome <strong>{data?.user?.name}</strong>&nbsp;<strong>{data?.company?.name}</strong></h2>
       <div className="flex justify-center">
         <div className="mb-3 w-96">
-          <form action={data.url} method="post" encType="multipart/form-data">
+          <form action={data?.url} method="post" encType="multipart/form-data">
             <input
               type="file"
               name="file"
@@ -59,7 +59,7 @@ export default function Index() {
               }}
             />
             <input type="hidden" name={"Content-Type"} value={type}/>
-            {Object.keys(data.fields).map(field => (
+            {Object.keys(data?.fields || {}).map(field => (
               <input key={field} type="hidden" name={field} value={data.fields[field]}/>
             ))}
             <input type="submit" value="submit"/>
