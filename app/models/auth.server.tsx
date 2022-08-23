@@ -1,6 +1,7 @@
 import { fetch } from "@remix-run/node";
 
 export async function check(token: string) {
+  console.log("Checking bearer", token);
   const res = await fetch("http://auth.example.com/", {
     headers: { "authorization": `bearer ${token}` }
   });
@@ -12,7 +13,7 @@ export async function login(email: string) {
   const res = await fetch("http://auth.example.com/login", {
     method: "post",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, type:'user' })
+    body: JSON.stringify({ email, type: "user" })
   });
 
   try {
