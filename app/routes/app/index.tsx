@@ -8,15 +8,24 @@ import { user } from "~/models/user.server";
 import { company } from "~/models/company.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
+  let authorized = false;
+  let userID = null;
+  let tokens = null;
+
   try {
     const session = await getSession(request);
 
-    const userID = session.get(USER_SESSION_KEY);
-    const tokens = JSON.parse(session.get(USER_TOKENS_KEY));
+    userID = session.get(USER_SESSION_KEY);
+    tokens = JSON.parse(session.get(USER_TOKENS_KEY));
+    authorized = await check(tokens.access_token);
+  } catch (e) {
+  }
 
-    if (!await check(tokens.access_token)) {
-      return await logout(request);
-    }
+  if (!authorized) {
+    return await logout(request);
+  }
+
+  try {
 
     const userData = await user(tokens.access_token);
     let companyData = null;
