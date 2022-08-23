@@ -55,6 +55,7 @@ export const action: ActionFunction = async ({ request }) => {
       tokens: JSON.stringify(tokens)
     });
   } catch (e) {
+    console.log(e);
     return validationError({
       formId: result.formId,
       fieldErrors: {
