@@ -14,28 +14,28 @@ export const loader: LoaderFunction = async ({ request }) => {
     const userID = session.get(USER_SESSION_KEY);
     const tokens = JSON.parse(session.get(USER_TOKENS_KEY));
 
-    if (await check(tokens.access_token)) {
-      const userData = await user(tokens.access_token);
-      let companyData = null;
-
-      try {
-        companyData = await company(tokens.access_token);
-      } catch (e) {
-      }
-
-      const uploadPayload = await upload(userID);
-      uploadPayload.fields = {
-        ...uploadPayload.fields,
-        "x-amz-meta-user-id": userID
-      };
-
-      return json({ ...uploadPayload, user: userData, company: companyData });
-    } else {
+    if (!await check(tokens.access_token)) {
       return await logout(request);
     }
+
+    const userData = await user(tokens.access_token);
+    let companyData = null;
+
+    try {
+      companyData = await company(tokens.access_token);
+    } catch (e) {
+    }
+
+    const uploadPayload = await upload(userID);
+    uploadPayload.fields = {
+      ...uploadPayload.fields,
+      "x-amz-meta-user-id": userID
+    };
+
+    return json({ ...uploadPayload, user: userData, company: companyData });
   } catch (e) {
     console.log(e);
-    return await logout(request);
+    return json({});
   }
 };
 
