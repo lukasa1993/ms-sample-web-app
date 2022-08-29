@@ -35,7 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     } catch (e) {
     }
 
-    const uploadPayload = await upload(userID);
+    const uploadPayload = await upload(tokens.access_token, userID);
     uploadPayload.fields = {
       ...uploadPayload.fields,
       "x-amz-meta-user-id": userID
